@@ -1,2 +1,54 @@
 framework:
-    workflows: ~
+    workflows:
+        blog_post:
+            type: workflow
+            marking_store:
+                type: multiple_state
+                arguments: [status]
+            supports: App\Entity\BlogPost
+            places:
+                - drafted
+                - needs_review
+                - needs_spellcheck
+                - reviewed
+                - spellchecked
+                - needs_changes
+                - needs_correction
+                - published
+            transitions:
+                -
+                    name: !php/const App\Entity\BlogPost::TRANSITION_SUBMIT
+                    from: !php/const App\Entity\BlogPost::STATUS_DRAFTED
+                    to:
+                        - !php/const App\Entity\BlogPost::STATUS_NEEDS_REVIEW
+                        - !php/const App\Entity\BlogPost::STATUS_NEEDS_SPELL_CHECK
+                -
+                    name: !php/const App\Entity\BlogPost::TRANSITION_REVIEW
+                    from: !php/const App\Entity\BlogPost::STATUS_NEEDS_REVIEW
+                    to: !php/const App\Entity\BlogPost::STATUS_REVIEWED
+                -
+                    name: !php/const App\Entity\BlogPost::TRANSITION_SPELL_CHECK
+                    from: !php/const App\Entity\BlogPost::STATUS_NEEDS_SPELL_CHECK
+                    to: !php/const App\Entity\BlogPost::STATUS_SPELL_CHECKED
+                -
+                    name: !php/const App\Entity\BlogPost::TRANSITION_REQUEST_CHANGES
+                    from: !php/const App\Entity\BlogPost::STATUS_NEEDS_REVIEW
+                    to: !php/const App\Entity\BlogPost::STATUS_NEEDS_CHANGES
+                -
+                    name: !php/const App\Entity\BlogPost::TRANSITION_APPLY_CORRECTION
+                    from: !php/const App\Entity\BlogPost::STATUS_NEEDS_CORRECTION
+                    to: !php/const App\Entity\BlogPost::STATUS_NEEDS_SPELL_CHECK
+                -
+                    name: !php/const App\Entity\BlogPost::TRANSITION_APPLY_CHANGES
+                    from: !php/const App\Entity\BlogPost::STATUS_NEEDS_CHANGES
+                    to: !php/const App\Entity\BlogPost::STATUS_NEEDS_REVIEW
+                -
+                    name: !php/const App\Entity\BlogPost::TRANSITION_REQUEST_CORRECTION
+                    from: !php/const App\Entity\BlogPost::STATUS_NEEDS_SPELL_CHECK
+                    to: !php/const App\Entity\BlogPost::STATUS_NEEDS_CORRECTION
+                -
+                    name: !php/const App\Entity\BlogPost::TRANSITION_PUBLISH
+                    from:
+                        - !php/const App\Entity\BlogPost::STATUS_REVIEWED
+                        - !php/const App\Entity\BlogPost::STATUS_SPELL_CHECKED
+                    to: !php/const App\Entity\BlogPost::STATUS_PUBLISHED

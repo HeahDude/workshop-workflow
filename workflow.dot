@@ -1,0 +1,41 @@
+digraph workflow {
+  ratio="compress" rankdir="LR"
+  node [fontsize="9" fontname="Arial" color="#333333" fillcolor="lightblue" fixedsize="1" width="1"];
+  edge [fontsize="9" fontname="Arial" color="#333333" arrowhead="normal" arrowsize="0.5"];
+
+  place_drafted [label="drafted", shape=circle, style="filled"];
+  place_needs_review [label="needs_review", shape=circle];
+  place_needs_spellcheck [label="needs_spellcheck", shape=circle];
+  place_reviewed [label="reviewed", shape=circle];
+  place_spellchecked [label="spellchecked", shape=circle];
+  place_needs_changes [label="needs_changes", shape=circle];
+  place_needs_correction [label="needs_correction", shape=circle];
+  place_published [label="published", shape=circle];
+  transition_submit [label="submit", shape=box, shape="box", regular="1"];
+  transition_review [label="review", shape=box, shape="box", regular="1"];
+  transition_spellcheck [label="spellcheck", shape=box, shape="box", regular="1"];
+  transition_request_changes [label="request_changes", shape=box, shape="box", regular="1"];
+  transition_apply_correction [label="apply_correction", shape=box, shape="box", regular="1"];
+  transition_apply_changes [label="apply_changes", shape=box, shape="box", regular="1"];
+  transition_request_correction [label="request_correction", shape=box, shape="box", regular="1"];
+  transition_publish [label="publish", shape=box, shape="box", regular="1"];
+  place_drafted -> transition_submit [style="solid"];
+  transition_submit -> place_needs_review [style="solid"];
+  transition_submit -> place_needs_spellcheck [style="solid"];
+  place_needs_review -> transition_review [style="solid"];
+  transition_review -> place_reviewed [style="solid"];
+  place_needs_spellcheck -> transition_spellcheck [style="solid"];
+  transition_spellcheck -> place_spellchecked [style="solid"];
+  place_needs_review -> transition_request_changes [style="solid"];
+  transition_request_changes -> place_needs_changes [style="solid"];
+  place_needs_correction -> transition_apply_correction [style="solid"];
+  transition_apply_correction -> place_needs_spellcheck [style="solid"];
+  place_needs_changes -> transition_apply_changes [style="solid"];
+  transition_apply_changes -> place_needs_review [style="solid"];
+  place_needs_spellcheck -> transition_request_correction [style="solid"];
+  transition_request_correction -> place_needs_correction [style="solid"];
+  place_reviewed -> transition_publish [style="solid"];
+  place_spellchecked -> transition_publish [style="solid"];
+  transition_publish -> place_published [style="solid"];
+}
+
